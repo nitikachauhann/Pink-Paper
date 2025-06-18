@@ -1,0 +1,24 @@
+{
+  "name": "doc-summarizer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@extractus/article-extractor": "^8.0.17",
+    "axios": "^1.8.4",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "doc-summarizer": "file:",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "openai": "^4.95.0"
+  },
+  "description": ""
+}

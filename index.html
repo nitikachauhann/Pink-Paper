@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>News Article Summarizer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    /* Base styles */
+    body {
+      font-family: 'Poppins', sans-serif;
+      padding: 30px;
+      max-width: 700px;
+      margin: auto;
+      background: linear-gradient(45deg, #f6d1d1, #f8e6f3);
+      color: #333;
+      transition: background 0.3s ease, color 0.3s ease;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5em;
+      color: #e91e63;
+      margin-bottom: 20px;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      margin-bottom: 20px;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 15px;
+      border: 2px solid #f1c4d8;
+      background: #fff;
+      color: #333;
+      resize: none;
+      outline: none;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    textarea:focus {
+      border-color: #ff80ab;
+    }
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 30px;
+      background-color: #ff80ab;
+      color: white;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      margin: 10px;
+    }
+    button:hover {
+      background-color: #f50057;
+      transform: scale(1.05);
+    }
+    #summary {
+      margin-top: 30px;
+      background: #fff;
+      padding: 20px;
+      border-left: 5px solid #ff80ab;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .dark-mode {
+      background: #121212;
+      color: #f1f1f1;
+    }
+    .dark-mode #summary {
+      background: #1e1e1e;
+      border-color: #ff80ab;
+    }
+    .dark-mode textarea {
+      background: #2c2c2c;
+      border-color: #444;
+      color: #f1f1f1;
+    }
+    .dark-mode button {
+      background-color: #ff80ab;
+    }
+    .dark-mode button:hover {
+      background-color: #f50057;
+    }
+    .dark-mode h1 {
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <h1> News Article Summarizer </h1>
+
+  <textarea id="inputText" placeholder="Paste your text or a news article link here..."></textarea>
+
+  <br>
+  <button onclick="summarizeText()">Summarize</button>
+  <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+
+  <div id="summary" style="display:none;"></div>
+
+  <script>
+    async function summarizeText() {
+      const inputText = document.getElementById("inputText").value.trim();
+      const summaryBox = document.getElementById("summary");
+
+      // Check if text is empty
+      if (!inputText) {
+        alert("Please enter some text to summarize.");
+        return;
+      }
+
+      // Show loading message
+      summaryBox.style.display = "block";
+      summaryBox.innerHTML = "<em>Summarizing... please wait...</em>";
+
+      try {
+        // Fetch summary from backend
+        const response = await fetch("http://localhost:5000/summarize", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ text: inputText })
+        });
+
+        const data = await response.json();
+
+        if (data.summary) {
+          summaryBox.innerHTML = `<strong>Summary:</strong><br>${data.summary}`;
+        } else {
+          summaryBox.innerHTML = `<strong>Error:</strong> ${data.error || 'No summary returned.'}`;
+        }
+      } catch (error) {
+        summaryBox.innerHTML = `<strong>Error:</strong> Could not connect to the backend.`;
+      }
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+  </script>
+</body>
+</html>
